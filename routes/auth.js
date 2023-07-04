@@ -1,20 +1,77 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-// const app = express()
-// const port = 3000
+const { authenticateJWT } = require("../firebase.js");
+const checkForUser = (id) => {
+  return User.exists({ googleUid: id });
+};
 
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-router.post("/login", (req, res) => {
-    console.log(req.body)
-    res.send("ok")
-})
+require("../models/User");
+const User = mongoose.model("users");
+
+router.post("/login", authenticateJWT, (req, res) => {
+  //   console.log(req.headers.authorization);
+  res.send("ok");
+});
 
 router.post("/register", (req, res) => {
-    console.log(req.body)
-    res.send("ok")
-})
+  console.log(req.body);
+  checkForUser(req.body.googleUid).then((doc) => {
+    if (!doc) {
+      console.log("Created new user", req.body.googleUid);
+      const newUser = {
+        UUID: uuidv4(),
+        userName: req.body.userName,
+        email: req.body.email,
+        googleUid: req.body.googleUid,
+        photoUrl: req.body.photoUrl,
+        subscription: "inactive",
+      };
+      new User(newUser).save().then(() => {
+        (user) => {
+          console.log(user);
+        };
+      });
 
+      return res.sendStatus(201);
+    } else {
+      res.sendStatus(302);
+    }
+  });
+});
+
+router.get("/user/:id", authenticateJWT, (req, res) => {
+  const userID = req.params.id;
+  User.findOne({
+    googleUid: userID,
+  })
+    .then((user) => {
+      res.json({
+        userName: user.userName,
+        email: user.email,
+        photoUrl: user.photoUrl,
+        subscription: user.subscription,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(404);
+    });
+});
 module.exports = router;
