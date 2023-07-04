@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
 
 const app = express();
-const port = 3333;
+const port = process.env.PORT || 3000;
 
 const corsOptions = {
   origin: "https://beaulife.netlify.app",
@@ -78,4 +78,4 @@ app.use("/api", authAPI);
 // app.options("*", cors());
 // app.options("/api/*", cors(corsOptions));
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, "0.0.0.0", () => console.log(`Listening on port ${port}`));
