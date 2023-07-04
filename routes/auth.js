@@ -31,6 +31,7 @@ router.post("/login", authenticateJWT, (req, res) => {
 });
 
 router.post("/register", (req, res) => {
+  // res.header("Access-Control-Allow-Origin", "*");
   console.log(req.body);
   checkForUser(req.body.googleUid).then((doc) => {
     if (!doc) {
@@ -48,9 +49,10 @@ router.post("/register", (req, res) => {
           console.log(user);
         };
       });
-
+      // res.header("Access-Control-Allow-Origin", "*");
       return res.sendStatus(201);
     } else {
+      // res.header("Access-Control-Allow-Origin", "*");
       res.sendStatus(302);
     }
   });
