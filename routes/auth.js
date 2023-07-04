@@ -36,7 +36,7 @@ router.post("/login", authenticateJWT, (req, res) => {
 
 // router.post("/register", cors(corsOptions));
 router.post("/register", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "https://beaulife.netlify.app");
   console.log(req.body);
   checkForUser(req.body.googleUid).then((doc) => {
     if (!doc) {
