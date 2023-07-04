@@ -6,7 +6,7 @@ require("dotenv").config();
 // const stringifiedKey = JSON.stringify(
 //   process.env.FIREBASE_ADMIN_PRIVATE_KEY
 // ).replace(/\\n/g, "\n");
-console.log(process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/gm, "\n"));
+// console.log(process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/gm, "\n"));
 
 const app = admin.initializeApp({
   // credential: admin.credential.cert(serviceAccount),
