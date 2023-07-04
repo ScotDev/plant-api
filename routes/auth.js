@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -30,6 +30,11 @@ router.post("/login", authenticateJWT, (req, res) => {
   res.send("ok");
 });
 
+// const corsOptions = {
+//   origin: ["http://localhost:5173", "https://beaulife.netlify.app/"],
+// };
+
+// router.post("/register", cors(corsOptions));
 router.post("/register", (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
   console.log(req.body);

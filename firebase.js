@@ -6,7 +6,7 @@ require("dotenv").config();
 // const stringifiedKey = JSON.stringify(
 //   process.env.FIREBASE_ADMIN_PRIVATE_KEY
 // ).replace(/\\n/g, "\n");
-console.log(process.env.FIREBASE_ADMIN_PRIVATE_KEY);
+console.log(process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/gm, "\n"));
 
 const app = admin.initializeApp({
   // credential: admin.credential.cert(serviceAccount),
@@ -14,7 +14,7 @@ const app = admin.initializeApp({
     type: "service_account",
     project_id: process.env.FIREBASE_ADMIN_PROJECT_ID,
     private_key_id: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
-    private_key: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+    private_key: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/gm, "\n"),
     client_email: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
     client_id: process.env.FIREBASE_ADMIN_CLIENT_ID,
     auth_uri: "https://accounts.google.com/o/oauth2/auth",
