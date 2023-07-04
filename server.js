@@ -7,8 +7,10 @@ const app = express();
 const port = 3333;
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://beaulife.netlify.app"],
+  origin: "https://beaulife.netlify.app",
 };
+
+app.use(cors(corsOptions));
 
 // mongoose
 //   .connect(
@@ -29,8 +31,6 @@ const corsOptions = {
 // const User = mongoose.model("users");
 
 // Dev only
-app.use(cors(corsOptions));
-// app.options("*", cors());
 
 // Facilitates access to paylod of POST/PUT request
 app.use(express.json());
@@ -74,5 +74,8 @@ app.put("/:Id", (req, res) => {
 
 // Use imported routes
 app.use("/api", authAPI);
+
+// app.options("*", cors());
+// app.options("/api/*", cors(corsOptions));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

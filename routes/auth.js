@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -30,13 +29,8 @@ router.post("/login", authenticateJWT, (req, res) => {
   res.send("ok");
 });
 
-// const corsOptions = {
-//   origin: ["http://localhost:5173", "https://beaulife.netlify.app/"],
-// };
-
-// router.post("/register", cors(corsOptions));
 router.post("/register", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "https://beaulife.netlify.app");
+  // res.header("Access-Control-Allow-Origin", "https://beaulife.netlify.app");
   console.log(req.body);
   checkForUser(req.body.googleUid).then((doc) => {
     if (!doc) {
@@ -64,6 +58,7 @@ router.post("/register", (req, res) => {
 });
 
 router.get("/user/:id", authenticateJWT, (req, res) => {
+  // res.header("Access-Control-Allow-Origin", "https://beaulife.netlify.app");
   const userID = req.params.id;
   User.findOne({
     googleUid: userID,
