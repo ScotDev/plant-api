@@ -7,7 +7,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const corsOptions = {
-  origin: "https://beaulife.netlify.app",
+  // origin: "https://beaulife.netlify.app",
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
@@ -46,6 +47,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Load other routes
 const authAPI = require("./routes/auth");
+const weatherAPI = require("./routes/weather");
 
 app.get("/", (req, res) => {
   return res.send("Hello World!");
@@ -73,7 +75,8 @@ app.put("/:Id", (req, res) => {
 // });
 
 // Use imported routes
-app.use("/api", authAPI);
+app.use("/auth", authAPI);
+app.use("/weather", weatherAPI);
 
 // app.options("*", cors());
 // app.options("/api/*", cors(corsOptions));
