@@ -3,12 +3,16 @@ const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
 
+require("dotenv").config();
+
 const app = express();
 const port = process.env.PORT || 3000;
 
+console.log(process.env.IS_DEV);
+
 const corsOptions = {
-  origin: "https://beaulife.netlify.app",
-  // origin: "*",
+  // origin: https://beaulife.netlify.app,
+  origin: process.env.IS_DEV ? "*" : "https://beaulife.netlify.app",
 };
 
 app.use(cors(corsOptions));

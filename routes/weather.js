@@ -48,7 +48,7 @@ router.post("/daily", async (req, res) => {
       //   console.log(parsedLocation.name, parsedLocation.country);
       const forecastDataArr = await apiRes.data.forecast.forecastday;
       const dailyData = [];
-      console.log(apiRes.data.location);
+
       await forecastDataArr.forEach((item) => {
         dailyData.push({
           date: item.date,
@@ -59,7 +59,7 @@ router.post("/daily", async (req, res) => {
           avgvis_miles: item.day.avgvis_miles,
           avghumidity: item.day.avghumidity,
           uv: item.day.uv,
-          //   Annoyingly wind speed only available at hourly level
+          //   Annoyingly wind direction only available at hourly level
         });
       });
       //   console.log(dailyData);
@@ -72,6 +72,63 @@ router.post("/daily", async (req, res) => {
     } catch (error) {
       console.log(error);
       res.status(404).send({ erroMsg: "Error contacting weather API" });
+    }
+  }
+
+  //   Handle errors
+  return res.status(400).send({ erroMsg: "No coords recieved" });
+});
+
+router.post("/hourly", async (req, res) => {
+  const { lat, long } = req.body;
+
+  if (lat && long) {
+    try {
+      const apiRes = await axios.get(
+        `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${lat},${long}&days=2&aqi=no&alerts=no`
+      );
+
+      const todayForecastDataArr = await apiRes.data.forecast.forecastday[0]
+        .hour;
+      const tomorrowForecastDataArr = await apiRes.data.forecast.forecastday[1]
+        .hour;
+      //   console.log(forecastDataArr);
+      const hourlyData = [];
+      //   Date object returns epoch time in milliseconds, API returns it in seconds
+      //   It was either convert one to seconds or 24 to milliseconds
+      const now = Date.now() / 1000;
+      //   console.log(now.toFixed(0));
+      await todayForecastDataArr.forEach((item) => {
+        // console.log(item.time_epoch);
+        // console.log(item.time_epoch > now);
+        if (item.time_epoch > now) {
+          hourlyData.push({
+            time: item.time,
+            condition: item.condition.text,
+            temp_c: item.temp_c,
+          });
+        }
+      });
+
+      const limit = 24 - hourlyData.length;
+      console.log(limit);
+      for (let index = 0; index < limit; index++) {
+        const item = tomorrowForecastDataArr[index];
+        // console.log(item);
+        hourlyData.push({
+          time: item.time,
+          condition: item.condition.text,
+          temp_c: item.temp_c,
+        });
+      }
+
+      return res.status(200).send({
+        // current: { temp_c, condition, wind_mph, humidity, vis_miles },
+        data: hourlyData,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(404).send({ erroMsg: "Error contacting weather API" });
     }
   }
 
