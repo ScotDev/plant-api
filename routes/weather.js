@@ -7,6 +7,7 @@ require("dotenv").config();
 // Should check auth state
 router.get("/all", async (req, res) => {
   const { lat, long } = req.body;
+
   //   Should check if correct params/body contents sent
   console.log(lat, long);
 
@@ -14,6 +15,7 @@ router.get("/all", async (req, res) => {
   //   await axios.get("");
 
   //   Parse out and return what's needed
+  //   .then(response => res.json(response.data))
 
   //   Handle errors
   res.send("ok");

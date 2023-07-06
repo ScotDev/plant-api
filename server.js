@@ -7,8 +7,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const corsOptions = {
-  // origin: "https://beaulife.netlify.app",
-  origin: "*",
+  origin: "https://beaulife.netlify.app",
+  // origin: "*",
 };
 
 app.use(cors(corsOptions));
