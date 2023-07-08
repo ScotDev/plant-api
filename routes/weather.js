@@ -33,9 +33,73 @@ router.post("/now", async (req, res) => {
   return res.status(400).send({ erroMsg: "No coords recieved" });
 });
 
+router.get("/daily", async (req, res) => {
+  const { lat, long } = req.query;
+  // console.log(lat, long);
+  console.log(req.query);
+  const updatedTime = Date.now();
+  // const options = {
+  //   year: "numeric",
+  //   month: "2-digit",
+  //   day: "2-digit",
+  // };
+
+  // const formattedDate = new Intl.DateTimeFormat("en-GB", options)
+  //   .format(updatedTime)
+  //   .replace(/\//g, "-");
+  if (lat && long) {
+    try {
+      const apiRes = await axios.get(
+        `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${lat},${long}&days=7&aqi=no&alerts=no`
+      );
+      //   console.log(apiRes.data);
+      const { name, country } = apiRes.data.location;
+      const { temp_c, condition, wind_mph, humidity, vis_miles } =
+        apiRes.data.current;
+      //   console.log(parsedLocation.name, parsedLocation.country);
+      const forecastDataArr = await apiRes.data.forecast.forecastday;
+      const dailyData = [];
+
+      await forecastDataArr.forEach((item) => {
+        // If item.date_epoch !== today, push to dailyData
+        // Generate code to format Date.now() to match item.date_epoch format
+        // const APIdate = new Date(item.date);
+        // const formattedDate2 = new Intl.DateTimeFormat("en-GB", options)
+        //   .format(APIdate)
+        //   .replace(/\//g, "-");
+
+        dailyData.push({
+          date: item.date,
+          condition: item.day.condition.text,
+          maxtemp_c: item.day.maxtemp_c,
+          mintemp_c: item.day.mintemp_c,
+          maxwind_mph: item.day.maxwind_mph,
+          avgvis_miles: item.day.avgvis_miles,
+          avghumidity: item.day.avghumidity,
+          uv: item.day.uv,
+          //   Annoyingly wind direction only available at hourly level
+        });
+      });
+      //   console.log(dailyData);
+      //   console.log(apiRes.data);
+      return res.status(200).send({
+        updatedTime,
+        location: { name, country },
+        current: { temp_c, condition, wind_mph, humidity, vis_miles },
+        data: dailyData,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(404).send({ erroMsg: "Error contacting weather API" });
+    }
+  }
+
+  //   Handle errors
+  return res.status(400).send({ erroMsg: "No coords recieved" });
+});
 router.post("/daily", async (req, res) => {
   const { lat, long } = req.body;
-
+  const updatedTime = Date.now();
   if (lat && long) {
     try {
       const apiRes = await axios.get(
@@ -65,6 +129,7 @@ router.post("/daily", async (req, res) => {
       //   console.log(dailyData);
       //   console.log(apiRes.data);
       return res.status(200).send({
+        updatedTime,
         location: { name, country },
         current: { temp_c, condition, wind_mph, humidity, vis_miles },
         data: dailyData,
