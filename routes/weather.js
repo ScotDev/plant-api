@@ -35,8 +35,9 @@ router.post("/now", async (req, res) => {
 
 router.get("/daily", async (req, res) => {
   const { lat, long } = req.query;
-  // console.log(lat, long);
-  console.log(req.query);
+  const date = new Date();
+  const formattedDate = date.toLocaleString();
+  console.log(formattedDate, req.query);
   const updatedTime = Date.now();
   // const options = {
   //   year: "numeric",

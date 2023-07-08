@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
+const rateLimit = require("express-rate-limit");
 
 require("dotenv").config();
 
@@ -17,25 +18,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// mongoose
-//   .connect(
-//     "mongodb://mongo:sIB5IkXZfMJD2riyvdg9@containers-us-west-44.railway.app:7282",
-//     {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//     }
-//   )
-//   .then(() => {
-//     console.log("DB connected");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
-// require("./models/User");
-// const User = mongoose.model("users");
-
-// Dev only
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 15 minutes
+  max: 20, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later",
+});
+app.use(limiter);
 
 // Facilitates access to paylod of POST/PUT request
 app.use(express.json());
