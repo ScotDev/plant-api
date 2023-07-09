@@ -174,7 +174,7 @@ router.get("/all", async (req, res) => {
           condition: item.day.condition.text,
           maxtemp_c: Math.trunc(item.day.maxtemp_c),
           mintemp_c: Math.trunc(item.day.mintemp_c),
-          maxwind_mph: item.day.maxwind_mph,
+          maxwind_mph: Math.trunc(item.day.maxwind_mph),
           avgvis_miles: item.day.avgvis_miles,
           avghumidity: item.day.avghumidity,
           uv: item.day.uv,
