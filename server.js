@@ -51,13 +51,13 @@ app.get("/uuid", (req, res) => {
   return res.send(id);
 });
 
-app.post("/", (req, res) => {
-  return res.send("Received a POST HTTP method");
-});
+// app.post("/", (req, res) => {
+//   return res.send("Received a POST HTTP method");
+// });
 
-app.put("/:Id", (req, res) => {
-  return res.send(`PUT HTTP method on user/${req.params.Id} resource`);
-});
+// app.put("/:Id", (req, res) => {
+//   return res.send(`PUT HTTP method on user/${req.params.Id} resource`);
+// });
 
 // app.get("/login", (req, res) => {
 //   res.send("login");
