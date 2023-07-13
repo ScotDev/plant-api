@@ -1,7 +1,13 @@
+// Import the express package
 const express = require("express");
+
+// Create a new router object
 const router = express.Router();
+
+// Import the axios package
 const axios = require("axios");
 
+// Import the dotenv package
 require("dotenv").config();
 
 router.get("/daily", async (req, res) => {
@@ -118,6 +124,7 @@ const formatCountry = (country) => {
     return country;
   }
 };
+
 router.get("/all", async (req, res) => {
   const { lat, long } = req.query;
 
@@ -131,7 +138,7 @@ router.get("/all", async (req, res) => {
 
       // Split data into now, daily, and hourly
       // Now
-      const { temp_c, condition, wind_mph, humidity, vis_miles } =
+      const { temp_c, condition, wind_mph, humidity, vis_miles, is_day } =
         apiRes.data.current;
       const conditionText = condition.text;
       const { name, region, country } = apiRes.data.location;
@@ -191,6 +198,7 @@ router.get("/all", async (req, res) => {
           vis_miles,
           maxtemp_c: Math.trunc(maxtemp_c),
           mintemp_c: Math.trunc(mintemp_c),
+          is_day: is_day === 1 ? true : false,
         },
         location: { name, region, country: formattedCountry },
         data: { hourlyData, dailyData },
